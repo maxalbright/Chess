@@ -386,15 +386,91 @@ bool Pawn::move(int fr, int fc, ChessPiece* BoardArray[][8], int whitesturn) {
 		}
 
 	}
-	delete [] BoardArray[fr][fc];
-	int temprow = rownum;
-	int tempcol = colnum;
-	rownum = fr;
-	colnum = fc;
-	BoardArray[fr][fc] = this;
-	BoardArray[temprow][tempcol] = new ChessPiece(temprow, tempcol, '-');
-	BoardArray[temprow][tempcol]->isWhite = 2;
 
+	// Need to check if the pawn if being promoted
+	if (whitesturn == 1 && rownum == 1) {
+		cout << "What do you want to promote to (Q, B, N, or R):  ";
+		char promotionselection;
+		cin >> promotionselection;
+		cout << endl;
+
+		delete [] BoardArray[fr][fc];
+		delete [] BoardArray[rownum][colnum];
+
+		if (promotionselection == 'Q') {
+			ChessPiece* promotion = new Queen(fr, fc, 'Q');
+			BoardArray[fr][fc] =  promotion;
+		}
+		else if (promotionselection == 'B') {
+			ChessPiece* promotion = new Bishop(fr, fc, 'B');
+			BoardArray[fr][fc] =  promotion;
+		}
+		else if (promotionselection == 'N') {
+			ChessPiece* promotion = new Knight(fr, fc, 'N');
+			BoardArray[fr][fc] =  promotion;		
+		}
+		else if (promotionselection == 'R') {
+			ChessPiece* promotion = new Rook(fr, fc, 'R');
+			BoardArray[fr][fc] =  promotion;
+			
+		}
+		BoardArray[rownum][colnum] = new ChessPiece(rownum, colnum, '-');
+		BoardArray[rownum][colnum]->isWhite = 0;
+
+		// Make the promoted piece White
+		BoardArray[fr][fc]->isWhite = 1;
+
+	}
+
+
+	else if (whitesturn == -1 && rownum == 6) {
+		cout << "What do you want to promote to (q, b, n, or r):  ";
+		char promotionselection;
+		cin >> promotionselection;
+		cout << endl;
+
+		delete [] BoardArray[fr][fc];
+		delete [] BoardArray[rownum][colnum];
+
+		if (promotionselection == 'q') {
+			ChessPiece* promotion = new Queen(fr, fc, 'q');
+			BoardArray[fr][fc] =  promotion;
+		}
+		else if (promotionselection == 'b') {
+			ChessPiece* promotion = new Bishop(fr, fc, 'b');
+			BoardArray[fr][fc] =  promotion;
+		}
+		else if (promotionselection == 'n') {
+			ChessPiece* promotion = new Knight(fr, fc, 'n');
+			BoardArray[fr][fc] =  promotion;		
+		}
+		else if (promotionselection == 'r') {
+			ChessPiece* promotion = new Rook(fr, fc, 'r');
+			BoardArray[fr][fc] =  promotion;
+			
+		}
+		BoardArray[rownum][colnum] = new ChessPiece(rownum, colnum, '-');
+		BoardArray[rownum][colnum]->isWhite = 0;
+
+		// Make the promoted piece Black
+		BoardArray[fr][fc]->isWhite = -1;
+
+	}
+
+
+	else {
+
+	// Otherwise just do the same thing as a normal capture
+		delete [] BoardArray[fr][fc];
+		int temprow = rownum;
+		int tempcol = colnum;
+		rownum = fr;
+		colnum = fc;
+		BoardArray[fr][fc] = this;
+		BoardArray[temprow][tempcol] = new ChessPiece(temprow, tempcol, '-');
+		BoardArray[temprow][tempcol]->isWhite = 0;
+
+	}
 
 	return true;
 }
